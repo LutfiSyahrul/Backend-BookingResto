@@ -3,8 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\Api\RestaurantController;
-use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\API\RestaurantController;
+use App\Http\Controllers\API\CheckoutController;
 use App\Http\Middleware\RoleMiddleware; 
 use App\Http\Controllers\API\AiAssistantController;
 use App\Http\Controllers\API\AdminReservationController;
@@ -29,7 +29,7 @@ Route::get('/settings', [\App\Http\Controllers\API\SettingController::class, 'ge
 Route::post('/chatbot/ask', [AiAssistantController::class, 'chat'])->middleware('throttle:5,1'); // Batasi 5 pertanyaan per menit untuk mencegah penyalahgunaan
 
 // rute untuk callback Midtrans (tidak perlu auth karena Midtrans yang akan akses) 
-Route::post('/midtrans/callback', [\App\Http\Controllers\Api\MidtransCallbackController::class, 'callback']);
+Route::post('/midtrans/callback', [\App\Http\Controllers\API\MidtransCallbackController::class, 'callback']);
 
 Route::post('/midtrans/callback', [\App\Http\Controllers\API\CheckoutController::class, 'callback']);
 
@@ -49,8 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my-reservations', [CheckoutController::class, 'index']);
 
     // Rute untuk favorit restoran (hanya untuk user yang login)
-    Route::get('/favorites', [\App\Http\Controllers\Api\FavoriteController::class, 'index']);
-    Route::post('/favorites/{restaurant_id}/toggle', [\App\Http\Controllers\Api\FavoriteController::class, 'toggle']);
+    Route::get('/favorites', [\App\Http\Controllers\API\FavoriteController::class, 'index']);
+    Route::post('/favorites/{restaurant_id}/toggle', [\App\Http\Controllers\API\FavoriteController::class, 'toggle']);
 
     // Rute untuk update avatar (hanya untuk user yang login)
     Route::post('/user/update-avatar', [AuthController::class, 'updateAvatar']);
