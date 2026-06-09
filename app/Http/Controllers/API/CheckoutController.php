@@ -194,15 +194,18 @@ class CheckoutController extends Controller
                 'snap_token' => $res->snap_token, // <--- WAJIB DIKIRIM agar tombol Midtrans menyala!
             ];
 
-            // LOGIKA PEMILAHAN 3 PASUKAN
+            // LOGIKA PEMILAHAN 3 PASUKAN (Berdasarkan Status & Tanggal)
             if ($res->status === 'pending') {
-                // Jika status masih gantung, masukkan ke tab Belum Bayar
+                // 1. Jika belum bayar, masuk ke Belum Bayar
                 $unpaid[] = $item;
+            } elseif (in_array($res->status, ['completed', 'cancelled'])) {
+                // 2. Jika Admin sudah menekan Selesai ATAU Dibatalkan, LANGSUNG masuk Riwayat (Past)
+                $past[] = $item;
             } elseif ($res->reservation_date >= $today) {
-                // Jika sudah lunas dan tanggalnya belum lewat, masukkan ke Mendatang
+                // 3. Jika status lunas (booked/dine_in) DAN tanggal belum lewat, masuk Mendatang
                 $upcoming[] = $item;
             } else {
-                // Sisanya (sudah lewat tanggal) masuk ke Riwayat
+            // 4. Jika status lunas (booked) TAPI tanggal sudah lewat (Admin lupa update), masuk Riwayat otomatis
                 $past[] = $item;
             }
         }
